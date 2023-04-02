@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-assets>
+      <img id="my-image" src="test.png" />
+      <img id="poster" src="sb.png" />
+    </a-assets>
+    <a-scene>
+      <a-sky color="lightblue"></a-sky>
+      <a-text
+        value="h"
+        negate="false"
+        scale="2 2 1"
+        position="-2 2 -4"
+      ></a-text>
+      <a-image
+        src="#my-image"
+        position="0 1.6 -1"
+        width="1"
+        height="1"
+      ></a-image>
+      <a-image src="#logo" width="3" height="3"></a-image>
+    </a-scene>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Basic</title>
+    <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+    <script src="build.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <a-assets>
+        <img id="my-image" src="sb.png" />
+      </a-assets>
+      <a-image src="sb.png" width="3" height="1.5"></a-image>
+
+      <!-- Using the asset management system. -->
+      <!-- Basic box. -->
+      <a-box
+        color="tomato"
+        depth="4"
+        height="4"
+        width="4"
+        position="10 2 -4"
+      ></a-box>
+
+      <!-- Textured box. -->
+      <a-entity
+        text-geometry="value: Hello!"
+        material="color: #66E1B4"
+        position="0 2 -4"
+      ></a-entity>
+      <a-entity
+        text-geometry="value: 안녕~"
+        material="color: #66E1B4"
+        position="0 5 -10"
+      ></a-entity>
+      <a-entity
+        text="value:qqq; color:#FFFFFF; shader: msdf; 
+        font:https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/seoulhangang/SeoulHangang-Bold.json;"
+        position="0 1 -2"
+      ></a-entity>
+      <a-sky color="#5F818A"></a-sky>
+    </a-scene>
+    <!--변수 설정-->
+    <style>
+      .github-corner:hover .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+      }
+      @keyframes octocat-wave {
+        0%,
+        100% {
+          transform: rotate(0);
+        }
+        20%,
+        60% {
+          transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+          transform: rotate(10deg);
+        }
+      }
+      @media (max-width: 500px) {
+        .github-corner:hover .octo-arm {
+          animation: none;
+        }
+        .github-corner .octo-arm {
+          animation: octocat-wave 560ms ease-in-out;
+        }
+      }
+    </style>
+    <!--endgithubcorner-->
+  </body>
+</html>
