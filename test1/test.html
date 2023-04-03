@@ -4,11 +4,20 @@
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
   </head>
   <body>
-    <a-assets>
-      <img id="my-image" src="test.png" />
-      <img id="poster" src="sb.png" />
-    </a-assets>
     <a-scene>
+      <a-assets>
+        <img
+          id="my-image"
+          src="https://cdn.aframe.io/examples/ui/kazetachinu.jpg"
+          alt="sberry"
+        />
+        <img
+          id="poster"
+          src="https://cdn.aframe.io/examples/ui/kazetachinu.jpg"
+          alt="poster"
+        />
+      </a-assets>
+      <!--이미지 로드 위해 mongoose 웹서버 설치-->
       <a-sky color="lightblue"></a-sky>
       <a-text
         value="h"
@@ -16,13 +25,9 @@
         scale="2 2 1"
         position="-2 2 -4"
       ></a-text>
-      <a-image
-        src="#my-image"
-        position="0 1.6 -1"
-        width="1"
-        height="1"
-      ></a-image>
-      <a-image src="#logo" width="3" height="3"></a-image>
+      <a-image src="my-image" position="0 6 -4" width="1" height="1"></a-image>
+      <a-image src="poster" position="0 4 -4" width="1" height="1"></a-image>
+      <a-entity material="src: #poster;" mixin="poster"></a-entity>
     </a-scene>
   </body>
 </html>
