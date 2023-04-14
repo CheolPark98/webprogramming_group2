@@ -8,37 +8,93 @@
     <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe-inspector@master/dist/aframe-inspector.min.js"></script>
     <script>
       /**
-       * Click mouse to shoot.
+       * shoot.
        */
-      AFRAME.registerComponent("click-to-shoot", {
+      AFRAME.registerComponent("shoot", {
         init: function () {
-          document.body.addEventListener("mousedown", () => {
-            this.el.emit("shoot");
+          // function for spacebar to shoot
+          document.body.addEventListener("keydown", (event) => {
+            if (event.code === "Space") {
+              this.el.emit("shoot");
+            }
+          });
+        },
+      });
+      AFRAME.registerComponent("hit-handler", {
+        dependencies: ["material"],
+        init: function () {
+          var color = new THREE.Color();
+
+          // Set the default loading color
+          color.set("green");
+          this.el.setAttribute("material", "color", color.getStyle());
+
+          // Change color when the object is hit
+          this.el.addEventListener("hit", () => {
+            color.set("red");
+            this.el.setAttribute("material", "color", color.getStyle());
+          });
+
+          // Change color when time runs out
+          this.el.sceneEl.addEventListener("time-up", () => {
+            color.set("blue");
+            this.el.setAttribute("material", "color", color.getStyle());
           });
         },
       });
 
       /**
-       * Change color when hit.
+       * Countdown Timer Component
        */
-      AFRAME.registerComponent("hit-handler", {
+      AFRAME.registerComponent("countdown-timer", {
+        schema: {
+          time: { type: "number", default: 3 },
+        },
+        init: function () {
+          this.timeRemaining = this.data.time;
+          this.timerText = document.createElement("a-text");
+          this.timerText.setAttribute("color", "black");
+          this.el.appendChild(this.timerText);
+          this.updateTimerDisplay();
+          setInterval(() => {
+            if (this.timeRemaining > 0) {
+              this.timeRemaining--;
+              this.updateTimerDisplay();
+            } else {
+              this.timeRemaining = this.data.time;
+              this.updateTimerDisplay();
+              // Added line to reset color of the box when the timer ends
+              this.el.sceneEl.emit("time-up", null);
+            }
+          }, 1000);
+        },
+        updateTimerDisplay: function () {
+          this.timerText.setAttribute(
+            "value",
+            "Time Remaining: " + this.timeRemaining
+          );
+        },
+      });
+
+      /**
+       * Bullet template component
+       */
+      AFRAME.registerComponent("bullet", {
         dependencies: ["material"],
 
+        schema: {
+          damagePoints: { default: 1.0, type: "float" },
+          maxTime: { default: 4.0, type: "float" }, // seconds.
+          name: { default: "normal", type: "string" },
+          poolSize: { default: 10, type: "int", min: 0 },
+          speed: { default: 8.0, type: "float" }, // meters / sec.
+        },
+
         init: function () {
-          var color;
           var el = this.el;
-
-          color = new THREE.Color();
-          color.set("#666");
-          el.components.material.material.color.copy(color);
-          el.addEventListener("hit", () => {
-            color.addScalar(0.05);
-            el.components.material.material.color.copy(color);
-          });
-
-          el.addEventListener("die", () => {
-            color.setRGB(1, 0, 0);
-            el.components.material.material.color.copy(color);
+          el.object3D.visible = false;
+          el.addEventListener("object3dset", (evt) => {
+            el.sceneEl.systems.bullet.registerBullet(this);
           });
         },
       });
@@ -51,7 +107,7 @@
         height="100"
         width="100"
         rotation="-90 0 0"
-        position="0 0 -6"
+        position="-3.52 -2.32 -24.8"
       ></a-plane>
 
       <a-text
@@ -63,6 +119,15 @@
         position="-1.3 3 -3"
       ></a-text>
 
+      <a-text
+        value="Press Space to shoot!"
+        color="#000000"
+        shader="msdf"
+        font="https://raw.githubusercontent.com/myso-kr/aframe-fonts-korean/master/fonts/ofl/nanumgothic/NanumGothic-Regular.json"
+        font
+        position="-1 2.7 -3"
+      ></a-text>
+
       <a-entity
         id="bulletTemplate"
         bullet
@@ -72,14 +137,21 @@
 
       <a-entity
         class="target"
-        target="healthPoints: 10"
+        target="healthPoints: 1"
         geometry="primitive: box"
-        material="color: teal"
         position="0 0 -4"
         hit-handler
       ></a-entity>
 
-      <a-camera id="camera" wasd-controls shooter click-to-shoot></a-camera>
+      <a-camera id="camera" wasd-controls shooter shoot>
+        <!-- Crosshair -->
+        <a-entity
+          position="0 0 -1"
+          text="value: +; color: black; font: roboto; align: center; width: 1;"
+        ></a-entity>
+        <!-- Timer -->
+        <a-entity position="-0.99 1.372 -1.914" countdown-timer></a-entity>
+      </a-camera>
     </a-scene>
   </body>
 </html>
